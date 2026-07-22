@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
 
     const { data: settings, error: settingsError } = await supabase
       .from('user_settings')
-      .select('gemini_api_key, gemini_model')
+      .select('gemini_api_key, gemini_model, language')
       .eq('user_id', user.id)
       .single()
 
@@ -56,7 +56,12 @@ export async function POST(req: NextRequest) {
     // Call Gemini API
     const ai = new GoogleGenAI({ apiKey: settings.gemini_api_key })
 
-    const prompt = `Summarize this YouTube video in markdown format. Include key points, timestamps if available, and main takeaways.\n\nVideo URL: ${url}`
+    const languageMap: Record<string, string> = {
+      ko: '한국어', en: 'English', ja: '日本語', zh: '中文', es: 'Español',
+    }
+    const lang = settings.language || 'en'
+    const langName = languageMap[lang] || 'English'
+    const prompt = `You must respond in ${langName}. Summarize this YouTube video in markdown format. Include key points, timestamps if available, and main takeaways.\n\nVideo URL: ${url}`
 
     const model = await getAvailableModel(
       settings.gemini_api_key,
