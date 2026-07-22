@@ -1,6 +1,7 @@
 import { GoogleGenAI } from '@google/genai'
 
 const MODEL_PREFIXES = ['models/gemini']
+const MODEL_EXCLUDE = [/lite/i, /preview/i]
 
 export const MODEL_PRIORITY = [
   /flash/i,
@@ -36,6 +37,7 @@ export async function listAvailableModels(apiKey: string): Promise<string[]> {
     if (
       model.name &&
       MODEL_PREFIXES.some((prefix) => model.name!.startsWith(prefix)) &&
+      !MODEL_EXCLUDE.some((pattern) => pattern.test(model.name!)) &&
       supportsGenerateContent(model as { supportedGenerationMethods?: string[]; supportedActions?: string[] })
     ) {
       models.push(model.name)
@@ -70,11 +72,11 @@ export async function getAvailableModel(
       MODEL_PRIORITY.some((pattern) => pattern.test(model))
     )
 
-    const model = selected ?? 'models/gemini-2.0-flash'
+    const model = selected ?? 'models/gemini-2.5-flash'
 
     cache.set(cacheKey, { model, expiresAt: Date.now() + CACHE_TTL_MS })
     return model
   } catch {
-    return preferredModel ?? 'models/gemini-2.0-flash'
+    return preferredModel ?? 'models/gemini-2.5-flash'
   }
 }
