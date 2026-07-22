@@ -40,10 +40,9 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Fetch user's Gemini API key from user_settings
     const { data: settings, error: settingsError } = await supabase
       .from('user_settings')
-      .select('gemini_api_key')
+      .select('gemini_api_key, gemini_model')
       .eq('user_id', user.id)
       .single()
 
@@ -59,7 +58,10 @@ export async function POST(req: NextRequest) {
 
     const prompt = `Summarize this YouTube video in markdown format. Include key points, timestamps if available, and main takeaways.\n\nVideo URL: ${url}`
 
-    const model = await getAvailableModel(settings.gemini_api_key)
+    const model = await getAvailableModel(
+      settings.gemini_api_key,
+      settings.gemini_model ?? undefined
+    )
 
     const response = await ai.models.generateContent({
       model,

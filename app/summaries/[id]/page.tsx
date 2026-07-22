@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import { MarkdownView } from './markdown-view'
 
@@ -10,10 +10,19 @@ export default async function SummaryDetailPage({
 }) {
   const supabase = createClient()
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect('/auth/login')
+  }
+
   const { data: summary, error } = await supabase
     .from('summaries')
     .select('*')
     .eq('id', params.id)
+    .eq('user_id', user.id)
     .single()
 
   if (error || !summary) {

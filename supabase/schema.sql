@@ -32,6 +32,7 @@ COMMENT ON TABLE public.profiles IS 'App-level user profile synced from auth.use
 CREATE TABLE IF NOT EXISTS public.user_settings (
     user_id        uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
     gemini_api_key text,
+    gemini_model   text,
     created_at     timestamptz DEFAULT now(),
     updated_at     timestamptz DEFAULT now()
 );
