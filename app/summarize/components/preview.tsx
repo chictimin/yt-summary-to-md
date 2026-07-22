@@ -18,7 +18,7 @@ export function Preview({ content }: PreviewProps) {
   }
 
   return (
-    <div className="card prose" style={{ padding: 24 }}>
+    <div className="card prose prose-invert" style={{ padding: 24 }}>
       <CopyButton text={content} />
       <ReactMarkdown>{content}</ReactMarkdown>
     </div>
