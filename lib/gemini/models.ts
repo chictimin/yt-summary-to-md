@@ -1,5 +1,7 @@
 import { GoogleGenAI } from '@google/genai'
 
+const MODEL_PREFIXES = ['models/gemini']
+
 export const MODEL_PRIORITY = [
   /flash/i,
   /pro/i,
@@ -33,6 +35,7 @@ export async function listAvailableModels(apiKey: string): Promise<string[]> {
   for await (const model of pager) {
     if (
       model.name &&
+      MODEL_PREFIXES.some((prefix) => model.name!.startsWith(prefix)) &&
       supportsGenerateContent(model as { supportedGenerationMethods?: string[]; supportedActions?: string[] })
     ) {
       models.push(model.name)
