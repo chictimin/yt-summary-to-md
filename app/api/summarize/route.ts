@@ -73,7 +73,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    let transcriptText: string
+    let transcriptText: string | null = null
     try {
       const transcript = await YoutubeTranscript.fetchTranscript(videoId)
       transcriptText = transcript.map((t) => t.text).join(' ')
@@ -81,13 +81,7 @@ export async function POST(req: NextRequest) {
         transcriptText = transcriptText.slice(0, 10000) + '...'
       }
     } catch {
-      return NextResponse.json(
-        {
-          error:
-            'Transcript not available for this video. The video may not have captions or auto-generated subtitles enabled.',
-        },
-        { status: 400 }
-      )
+      // URL fallback below when transcriptText is null
     }
 
     // Call Gemini API
@@ -98,7 +92,9 @@ export async function POST(req: NextRequest) {
     }
     const lang = settings.language || 'en'
     const langName = languageMap[lang] || 'English'
-    const prompt = `You must respond in ${langName}. Summarize the following YouTube video transcript in markdown format. Include key points, timestamps if available, main takeaways, and the video title if you can infer it.\n\nTranscript:\n${transcriptText}`
+    const prompt = transcriptText
+      ? `You must respond in ${langName}. Summarize the following YouTube video transcript in markdown format. Include key points, timestamps if available, main takeaways, and the video title if you can infer it.\n\nTranscript:\n${transcriptText}`
+      : `You must respond in ${langName}. Watch this YouTube video and summarize it in markdown format. Include key points, timestamps if available, and main takeaways.\n\nVideo URL: ${url}`
 
     const model = await getAvailableModel(
       settings.gemini_api_key,
