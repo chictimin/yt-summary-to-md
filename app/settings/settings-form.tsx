@@ -79,6 +79,17 @@ export function SettingsForm({
           placeholder="Gemini API 키를 입력하세요"
           className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
+        <p className="text-xs text-gray-500 mt-1">
+          <a
+            href="https://aistudio.google.com/apikey"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-gray-700"
+          >
+            Google AI Studio
+          </a>
+          에서 구글 계정으로 로그인 후 무료로 발급받을 수 있습니다.
+        </p>
       </div>
 
       {loadingModels && (
