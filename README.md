@@ -2,19 +2,21 @@
 
 YouTube 영상 URL을 붙여넣으면 Gemini AI가 핵심 포인트를 추출해 마크다운으로 요약해주는 웹 애플리케이션. 각자 자신의 Gemini API 키를 등록해 사용하며 계정별로 데이터가 격리된다.
 
-> aiffel 과제물. [[Youtube auto summarize to md]] 아이디어에서 출발해 [[PRD-yt-summary-to-md]]를 기준으로 바이브코딩으로 구현.
+실제 배포 경로 : [https://yt-summary-to-md.vercel.app/](https://yt-summary-to-md.vercel.app/)
+
+> aiffel 과제물용 바이브코딩으로 구현.
 
 ## 스택
 
-| 계층 | 기술 |
-|---|---|
-| Framework | Next.js 14 (App Router) |
-| Language | TypeScript |
-| Auth / DB | Supabase (PostgreSQL + Auth + RLS) |
-| AI | Google Gemini API (`@google/genai`) |
-| Styling | Tailwind 디렉티브(베이스) + `globals.css`의 커스텀 다크 테마 CSS (Claude Design 프로젝트에서 이식) |
-| Markdown | react-markdown |
-| Deployment | Vercel |
+| 계층       | 기술                                                                                               |
+| ---------- | -------------------------------------------------------------------------------------------------- |
+| Framework  | Next.js 14 (App Router)                                                                            |
+| Language   | TypeScript                                                                                         |
+| Auth / DB  | Supabase (PostgreSQL + Auth + RLS)                                                                 |
+| AI         | Google Gemini API (`@google/genai`)                                                                |
+| Styling    | Tailwind 디렉티브(베이스) + `globals.css`의 커스텀 다크 테마 CSS (Claude Design 프로젝트에서 이식) |
+| Markdown   | react-markdown                                                                                     |
+| Deployment | Vercel                                                                                             |
 
 ## 핵심 결정 사항
 
@@ -47,7 +49,6 @@ YouTube 영상 URL을 붙여넣으면 Gemini AI가 핵심 포인트를 추출해
 - 요약 텍스트 편집 기능
 - 요약 방식 설정 옵션 (상세/간결/포인트 중심 등)
 - 반응형·에러 UI 보강
-- 상세 계획: [[post-launch-improvements]]
 
 ## 시작하기
 
@@ -56,7 +57,7 @@ npm install
 npm run dev
 ```
 
-[http://localhost:3000](http://localhost:3000)에서 확인 가능.
+위 명령어 입력 후 [http://localhost:3000](http://localhost:3000)에서 확인 가능.
 
 ## 환경 변수
 
@@ -162,21 +163,19 @@ tailwind.config.ts       # Tailwind 설정 (+ typography 플러그인)
 
 ### Server Actions
 
-| Action | 경로 | 설명 |
-|---|---|---|
-| `saveSummary` | `app/summarize/actions.ts` | 요약 DB 저장 (30개 제한 체크) |
-| `deleteSummary` | `app/summaries/actions.ts` | 요약 삭제 |
-| `saveSettings` | `app/settings/actions.ts` | API 키·모델·언어 설정 저장 |
-| `listModels` | `app/settings/actions.ts` | Gemini API 키로 사용 가능한 모델 목록 조회 |
-| `login`·`signup`·`logout` | `app/auth/actions.ts` | Supabase Auth |
+| Action                    | 경로                       | 설명                                       |
+| ------------------------- | -------------------------- | ------------------------------------------ |
+| `saveSummary`             | `app/summarize/actions.ts` | 요약 DB 저장 (30개 제한 체크)              |
+| `deleteSummary`           | `app/summaries/actions.ts` | 요약 삭제                                  |
+| `saveSettings`            | `app/settings/actions.ts`  | API 키·모델·언어 설정 저장                 |
+| `listModels`              | `app/settings/actions.ts`  | Gemini API 키로 사용 가능한 모델 목록 조회 |
+| `login`·`signup`·`logout` | `app/auth/actions.ts`      | Supabase Auth                              |
 
 ## 현재 상태
 
 - **status**: `active` — MVP 구현 완료, Vercel 프로덕션 배포됨
 - 배포 후 Claude Design(claude.ai/design)에서 전체 UI 디자인을 새로 잡아 "yt2md" 다크 테마로 리스킨 완료
 - 현재 GitHub push → Vercel 자동 배포는 연결되지 않음 (수동 `vercel --prod`)
-- 배포 후 개선사항: [[post-launch-improvements]]
-- 버그 수정 기록: [[debug-log]]
 
 ## 한계
 
