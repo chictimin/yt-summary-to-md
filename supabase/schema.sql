@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS public.user_settings (
     user_id        uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
     gemini_api_key text,
     gemini_model   text,
-    language       text NOT NULL DEFAULT 'korean',
+    language       text NOT NULL DEFAULT 'ko',
     created_at     timestamptz DEFAULT now(),
     updated_at     timestamptz DEFAULT now()
 );

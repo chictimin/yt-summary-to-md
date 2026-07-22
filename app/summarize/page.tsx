@@ -104,7 +104,7 @@ export default function SummarizePage() {
       {loading && !markdown && (
         <div className="text-center py-16">
           <div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4" />
-          <p className="text-gray-500 dark:text-gray-400">Fetching transcript and generating summary...</p>
+          <p className="text-gray-500 dark:text-gray-400">Generating summary...</p>
         </div>
       )}
 
