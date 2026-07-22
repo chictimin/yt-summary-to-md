@@ -68,11 +68,8 @@ export async function getAvailableModel(
       return preferredModel
     }
 
-    const selected = availableModels.find((model) =>
-      MODEL_PRIORITY.some((pattern) => pattern.test(model))
-    )
-
-    const model = selected ?? 'models/gemini-2.0-flash'
+    const flashModel = availableModels.find((m) => /flash/i.test(m))
+    const model = flashModel ?? availableModels[availableModels.length - 1]
 
     cache.set(cacheKey, { model, expiresAt: Date.now() + CACHE_TTL_MS })
     return model
