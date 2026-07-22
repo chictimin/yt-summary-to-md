@@ -2,13 +2,16 @@
 
 import { logout } from '@/app/auth/actions'
 
-export function LogoutButton() {
+export function LogoutButton({
+  className = 'btn btn-danger',
+  style,
+}: {
+  className?: string
+  style?: React.CSSProperties
+}) {
   return (
-    <form action={logout}>
-      <button
-        type="submit"
-        className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors"
-      >
+    <form action={logout} style={{ margin: 0 }}>
+      <button type="submit" className={className} style={style}>
         Logout
       </button>
     </form>

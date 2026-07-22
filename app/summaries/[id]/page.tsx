@@ -29,42 +29,30 @@ export default async function SummaryDetailPage({
     notFound()
   }
 
-  const createdDate = new Date(summary.created_at).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
+  const createdDate = new Date(summary.created_at).toLocaleDateString('ko-KR')
 
   return (
-    <main className="max-w-4xl mx-auto px-4 py-8">
-      <Link
-        href="/summaries"
-        className="inline-block text-sm text-blue-600 dark:text-blue-400 hover:underline mb-6"
-      >
-        &larr; Back to list
-      </Link>
+    <div className="container">
+      <div className="page page-narrow">
+        <Link href="/summaries" className="back-link">
+          &larr; 목록으로
+        </Link>
 
-      <article>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-          {summary.video_title}
-        </h1>
+        <article>
+          <h1 className="detail-title">{summary.video_title}</h1>
 
-        <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-8">
-          <a
-            href={summary.youtube_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 dark:text-blue-400 hover:underline"
-          >
-            Watch on YouTube
-          </a>
-          <span>{createdDate}</span>
-        </div>
+          <div className="detail-meta">
+            <a href={summary.youtube_url} target="_blank" rel="noopener noreferrer">
+              Watch on YouTube
+            </a>
+            <span>{createdDate}</span>
+          </div>
 
-        <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
-          <MarkdownView content={summary.summary_md} />
-        </div>
-      </article>
-    </main>
+          <div className="detail-divider">
+            <MarkdownView content={summary.summary_md} />
+          </div>
+        </article>
+      </div>
+    </div>
   )
 }

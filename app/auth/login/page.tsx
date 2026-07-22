@@ -19,50 +19,29 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-6">
-        <h1 className="text-2xl font-bold text-center">로그인</h1>
-        <form action={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium mb-1">
-              이메일
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              required
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+    <div className="auth-wrap">
+      <div className="card auth-card">
+        <h1>로그인</h1>
+        <form action={handleSubmit}>
+          <div className="field">
+            <label htmlFor="email">이메일</label>
+            <input id="email" name="email" type="email" required />
           </div>
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium mb-1">
-              비밀번호
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              required
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+          <div className="field" style={{ marginBottom: 22 }}>
+            <label htmlFor="password">비밀번호</label>
+            <input id="password" name="password" type="password" required />
           </div>
           {error && (
-            <p className="text-sm text-red-600">{error}</p>
+            <p className="hint" style={{ color: 'var(--danger)', marginBottom: 18 }}>
+              {error}
+            </p>
           )}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
-          >
+          <button type="submit" disabled={loading} className="btn btn-primary btn-block">
             {loading ? '처리 중...' : '로그인'}
           </button>
         </form>
-        <p className="text-center text-sm text-gray-600">
-          계정이 없으신가요?{' '}
-          <Link href="/auth/signup" className="text-blue-600 hover:underline">
-            회원가입
-          </Link>
+        <p className="auth-foot">
+          계정이 없으신가요? <Link href="/auth/signup">회원가입</Link>
         </p>
       </div>
     </div>

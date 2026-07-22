@@ -74,53 +74,47 @@ export default function SummarizePage() {
   const showSaveButton = markdown && !loading && !saveSuccess
 
   return (
-    <main className="max-w-4xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
-        Summarize YouTube Video
-      </h1>
+    <div className="container">
+      <div className="page page-narrow">
+        <h1 className="page-title">새 요약 만들기</h1>
 
-      <div className="mb-8">
         <UrlForm onSubmit={handleSubmit} loading={loading} />
+
+        {error && (
+          <p className="hint" style={{ color: 'var(--danger)', marginBottom: 20 }}>
+            {error}
+          </p>
+        )}
+
+        {saveError && (
+          <p className="hint" style={{ color: 'var(--danger)', marginBottom: 20 }}>
+            {saveError}
+          </p>
+        )}
+
+        {saveSuccess && (
+          <p className="hint" style={{ color: 'var(--accent-text)', marginBottom: 20 }}>
+            Summary saved! Redirecting...
+          </p>
+        )}
+
+        {loading && !markdown && (
+          <div style={{ textAlign: 'center', padding: '64px 20px' }}>
+            <div className="spinner" style={{ margin: '0 auto 16px' }} />
+            <p className="hint">Generating summary...</p>
+          </div>
+        )}
+
+        <Preview content={markdown} />
+
+        {showSaveButton && (
+          <div className="save-row">
+            <button onClick={handleSave} disabled={saveLoading} className="btn btn-primary">
+              {saveLoading ? 'Saving...' : 'Save Summary'}
+            </button>
+          </div>
+        )}
       </div>
-
-      {error && (
-        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg text-red-700 dark:text-red-400 text-sm">
-          {error}
-        </div>
-      )}
-
-      {saveError && (
-        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg text-red-700 dark:text-red-400 text-sm">
-          {saveError}
-        </div>
-      )}
-
-      {saveSuccess && (
-        <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg text-green-700 dark:text-green-400 text-sm">
-          Summary saved! Redirecting...
-        </div>
-      )}
-
-      {loading && !markdown && (
-        <div className="text-center py-16">
-          <div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4" />
-          <p className="text-gray-500 dark:text-gray-400">Generating summary...</p>
-        </div>
-      )}
-
-      <Preview content={markdown} />
-
-      {showSaveButton && (
-        <div className="mt-6 flex justify-end">
-          <button
-            onClick={handleSave}
-            disabled={saveLoading}
-            className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors"
-          >
-            {saveLoading ? 'Saving...' : 'Save Summary'}
-          </button>
-        </div>
-      )}
-    </main>
+    </div>
   )
 }

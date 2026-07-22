@@ -7,11 +7,7 @@ function SubmitButton() {
   const { pending } = useFormStatus()
 
   return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="px-3 py-1.5 text-xs font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 rounded-md hover:bg-red-100 dark:hover:bg-red-900/50 disabled:opacity-50"
-    >
+    <button type="submit" disabled={pending} className="btn btn-danger">
       {pending ? '삭제 중...' : '삭제'}
     </button>
   )
