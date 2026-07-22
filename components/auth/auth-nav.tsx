@@ -24,6 +24,9 @@ export async function AuthNav() {
               <span className="text-sm text-gray-600 dark:text-gray-400">
                 {user.email}
               </span>
+              <Link href="/settings" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
+                Settings
+              </Link>
               <LogoutButton />
             </div>
           ) : (

@@ -44,7 +44,7 @@ export async function listAvailableModels(apiKey: string): Promise<string[]> {
     }
   }
 
-  return models
+  return models.reverse()
 }
 
 export async function getAvailableModel(
