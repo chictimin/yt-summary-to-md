@@ -33,6 +33,7 @@ yarn-error.log*
 
 # local tooling
 .codegraph
+.omo/run-continuation/
 
 # typescript
 *.tsbuildinfo
