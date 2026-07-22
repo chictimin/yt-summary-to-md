@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { updateApiKey, listModels } from './actions'
+import { saveSettings, listModels } from './actions'
 
 function detectBrowserLanguage(): string {
   if (typeof navigator === 'undefined') return 'auto'
@@ -55,7 +55,7 @@ export function SettingsForm({
   async function handleSubmit(formData: FormData) {
     setLoading(true)
     setMessage(null)
-    const result = await updateApiKey(formData)
+    const result = await saveSettings(formData)
     if (result?.error) {
       setMessage({ type: 'error', text: result.error })
     } else {
