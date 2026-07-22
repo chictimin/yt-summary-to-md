@@ -1,20 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { GoogleGenAI } from '@google/genai'
+import { GoogleGenAI, createPartFromUri, createUserContent } from '@google/genai'
 import { getAvailableModel } from '@/lib/gemini/models'
-import { YoutubeTranscript } from 'youtube-transcript'
 
 function extractVideoId(url: string): string | null {
   try {
     const parsed = new URL(url)
-    const hostname = parsed.hostname.replace(/^www\./, '')
+    const hostname = parsed.hostname.replace(/^(www\.|m\.)/, '')
 
     if (hostname === 'youtube.com') {
       if (parsed.pathname === '/watch') {
         return parsed.searchParams.get('v')
       }
-      if (parsed.pathname.startsWith('/embed/')) {
-        return parsed.pathname.split('/')[2] || null
+      const match = parsed.pathname.match(/^\/(embed|v|shorts)\/([^/]+)/)
+      if (match) {
+        return match[2]
       }
     }
 
@@ -73,17 +73,6 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    let transcriptText: string | null = null
-    try {
-      const transcript = await YoutubeTranscript.fetchTranscript(videoId)
-      transcriptText = transcript.map((t) => t.text).join(' ')
-      if (transcriptText.length > 10000) {
-        transcriptText = transcriptText.slice(0, 10000) + '...'
-      }
-    } catch {
-      // URL fallback below when transcriptText is null
-    }
-
     // Call Gemini API
     const ai = new GoogleGenAI({ apiKey: settings.gemini_api_key })
 
@@ -92,9 +81,7 @@ export async function POST(req: NextRequest) {
     }
     const lang = settings.language || 'en'
     const langName = languageMap[lang] || 'English'
-    const prompt = transcriptText
-      ? `You must respond in ${langName}. Summarize the following YouTube video transcript in markdown format. Include key points, timestamps if available, main takeaways, and the video title if you can infer it.\n\nTranscript:\n${transcriptText}`
-      : `You must respond in ${langName}. Watch this YouTube video and summarize it in markdown format. Include key points, timestamps if available, and main takeaways.\n\nVideo URL: ${url}`
+    const prompt = `You must respond in ${langName}. Watch this YouTube video and summarize it in markdown format. Include key points, timestamps if available, and main takeaways.`
 
     const model = await getAvailableModel(
       settings.gemini_api_key,
@@ -103,7 +90,9 @@ export async function POST(req: NextRequest) {
 
     const response = await ai.models.generateContent({
       model,
-      contents: prompt,
+      // mimeType is a required placeholder for the SDK type — Gemini fetches
+      // the actual video server-side from a public YouTube URL regardless of it.
+      contents: createUserContent([createPartFromUri(url, 'video/mp4'), prompt]),
     })
 
     const summary = response.text
