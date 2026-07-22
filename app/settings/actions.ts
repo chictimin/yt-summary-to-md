@@ -4,9 +4,10 @@ import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { listAvailableModels } from '@/lib/gemini/models'
 
-export async function updateApiKey(formData: FormData) {
+export async function saveSettings(formData: FormData) {
   const apiKey = formData.get('apiKey') as string
   const model = formData.get('model') as string | null
+  const language = formData.get('language') as string | null
   const supabase = createClient()
 
   const {
@@ -18,7 +19,7 @@ export async function updateApiKey(formData: FormData) {
   }
 
   const { error } = await supabase.from('user_settings').upsert(
-    { user_id: user.id, gemini_api_key: apiKey, gemini_model: model },
+    { user_id: user.id, gemini_api_key: apiKey, gemini_model: model, language },
     { onConflict: 'user_id' }
   )
 
