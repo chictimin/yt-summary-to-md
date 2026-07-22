@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { GoogleGenAI } from '@google/genai'
+import { getAvailableModel } from '@/lib/gemini/models'
 
 export async function POST(req: NextRequest) {
   try {
@@ -58,8 +59,10 @@ export async function POST(req: NextRequest) {
 
     const prompt = `Summarize this YouTube video in markdown format. Include key points, timestamps if available, and main takeaways.\n\nVideo URL: ${url}`
 
+    const model = await getAvailableModel(settings.gemini_api_key)
+
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model,
       contents: prompt,
     })
 

@@ -5,6 +5,15 @@
 -- ============================================================
 
 -- ------------------------------------------------------------
+-- 0. Schema permissions (required for new Supabase projects)
+--    Without these, authenticated/anon roles get "permission denied"
+-- ------------------------------------------------------------
+GRANT ALL ON ALL TABLES IN SCHEMA public TO authenticated;
+GRANT ALL ON ALL TABLES IN SCHEMA public TO anon;
+GRANT USAGE ON SCHEMA public TO authenticated;
+GRANT USAGE ON SCHEMA public TO anon;
+
+-- ------------------------------------------------------------
 -- 1. profiles table
 --    Mirrors auth.users for app-level user data.
 -- ------------------------------------------------------------
@@ -123,7 +132,9 @@ CREATE TRIGGER user_settings_updated_at
 -- 7. Trigger: auto-create profile on auth.user creation
 -- ------------------------------------------------------------
 CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER
+SECURITY DEFINER SET search_path = ''
+AS $$
 BEGIN
     INSERT INTO public.profiles (id, email)
     VALUES (NEW.id, NEW.email);
