@@ -3,13 +3,23 @@
 import { useState, useEffect, useCallback } from 'react'
 import { updateApiKey, listModels } from './actions'
 
+function detectBrowserLanguage(): string {
+  if (typeof navigator === 'undefined') return 'auto'
+  const lang = navigator.language?.split('-')[0]?.toLowerCase()
+  const supported = ['ko', 'en', 'ja', 'zh', 'es']
+  return supported.includes(lang) ? lang : 'en'
+}
+
 export function SettingsForm({
   currentKey,
   currentModel,
+  currentLanguage,
 }: {
   currentKey: string
   currentModel: string
+  currentLanguage?: string
 }) {
+  const [language] = useState(currentLanguage || detectBrowserLanguage())
   const [message, setMessage] = useState<{
     type: 'success' | 'error'
     text: string
@@ -99,6 +109,27 @@ export function SettingsForm({
           </select>
         </div>
       )}
+
+      <div>
+        <label htmlFor="language" className="block text-sm font-medium mb-1">
+          요약 언어
+        </label>
+        <select
+          id="language"
+          name="language"
+          defaultValue={language}
+          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="ko">한국어</option>
+          <option value="en">English</option>
+          <option value="ja">日本語</option>
+          <option value="zh">中文</option>
+          <option value="es">Español</option>
+        </select>
+        <p className="text-xs text-gray-500 mt-1">
+          요약 결과가 출력될 언어입니다. 저장되지 않은 경우 브라우저 언어를 자동 감지합니다.
+        </p>
+      </div>
 
       {message && (
         <p
