@@ -72,11 +72,11 @@ export async function getAvailableModel(
       MODEL_PRIORITY.some((pattern) => pattern.test(model))
     )
 
-    const model = selected ?? 'models/gemini-2.5-flash'
+    const model = selected ?? 'models/gemini-2.0-flash'
 
     cache.set(cacheKey, { model, expiresAt: Date.now() + CACHE_TTL_MS })
     return model
   } catch {
-    return preferredModel ?? 'models/gemini-2.5-flash'
+    return preferredModel ?? 'models/gemini-2.0-flash'
   }
 }
